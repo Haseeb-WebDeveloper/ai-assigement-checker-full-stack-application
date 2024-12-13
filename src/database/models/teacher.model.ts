@@ -8,7 +8,7 @@ export interface ITeacher extends IBaseDocument {
   teacherId: string;
   profileImage?: string;
   department: string;
-  designation: string;
+  bio: string;
   specialization: string[];
   subjects: Array<{
     subjectId: mongoose.Schema.Types.ObjectId;
@@ -65,8 +65,7 @@ const TeacherSchema = new Schema(
     password: { type: String, required: true },
     profileImage: { type: String, default: "" },
     department: { type: String, required: true },
-    designation: { type: String, required: true },
-    specialization: [String],
+    bio: { type: String, maxLength: 300 },
     
     subjects: [{
       subjectId: { type: Schema.Types.ObjectId, ref: 'Subject', required: true },
@@ -147,4 +146,5 @@ TeacherSchema.index({ 'subjects.subjectId': 1 });
 TeacherSchema.index({ 'assignments.assignmentId': 1 });
 TeacherSchema.index({ 'availability.status': 1 });
 
-export default mongoose.models.Teacher || mongoose.model<ITeacher>('Teacher', TeacherSchema);
+export const Teacher = mongoose.models.Teacher || mongoose.model<ITeacher>('Teacher', TeacherSchema);
+  
