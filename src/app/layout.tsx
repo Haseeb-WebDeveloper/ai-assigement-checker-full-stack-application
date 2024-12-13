@@ -6,8 +6,8 @@ import { ThemeProvider } from "@/components/theme-provider";
 
 
 export const metadata: Metadata = {
-  title: "AI Assigement Checker",
-  description: "AI Assigement Checker | Send Assigment to your teacher and get the result",
+  title: "AI University Assigement Checker",
+  description: "AI University Assigement Checker | Send Assigment to your teacher and get the result",
 };
 
 export default function RootLayout({
