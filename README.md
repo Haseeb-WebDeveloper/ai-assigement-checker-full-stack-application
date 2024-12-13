@@ -1,36 +1,39 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Assignment Grading Platform
 
-## Getting Started
+A modern web application for automatic assignment analysis and grading, built with **Next.js**, **MongoDB**, and **AI tools**. The platform streamlines the process of grading assignments for teachers, providing students with instant feedback, and enabling admins to manage the system effectively.
 
-First, run the development server:
+## Features
+### **Students**
+- Upload assignments in PDF or image formats.
+- View graded assignments and feedback.
+- Track assignment statuses.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### **Teachers**
+- View and analyze student submissions.
+- Automatically grade assignments using AI.
+- Provide feedback and adjust grades if needed.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### **Admins**
+- Manage users (students and teachers).
+- Monitor platform activity.
+- Oversee assignment analysis workflows.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Tech Stack
+- **Frontend**: Next.js, Tailwind CSS
+- **Backend**: Node.js, MongoDB
+- **Authentication**: JWT and Role-Based Access
+- **File Uploads**: Multer, Cloudinary
+- **AI Analysis**: Hugging Face, TensorFlow.js
+- **Deployment**: Vercel or similar
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Setup
+### Prerequisites
+- Node.js v16+ installed
+- MongoDB instance (local or Atlas)
+- Environment variables configured (`.env.local` file)
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Installation
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/assignment-grading-platform.git
+   cd assignment-grading-platform
