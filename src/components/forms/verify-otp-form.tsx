@@ -19,12 +19,12 @@ import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-export function VerifyOTPForm({ email }: { email: string }) {
-  console.log("Email:", email);
+export function VerifyOTPForm({ email, role }: { email: string; role: string }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = React.useState(false);
-  const [resendDisabled, setResendDisabled] = React.useState(false);
-  const [countdown, setCountdown] = React.useState(30);
+
+  console.log("VerifyOTPForm - Email:", email);
+  console.log("VerifyOTPForm - Role:", role);
 
   const form = useForm<{ code: string }>({
     resolver: zodResolver(verifyOTPSchema.omit({ email: true })),
@@ -33,33 +33,21 @@ export function VerifyOTPForm({ email }: { email: string }) {
     },
   });
 
-  // React.useEffect(() => {
-  //   let timer: NodeJS.Timeout;
-  //   if (resendDisabled && countdown > 0) {
-  //     timer = setInterval(() => {
-  //       setCountdown((prev) => prev - 1);
-  //     }, 1000);
-  //   }
-  //   if (countdown === 0) {
-  //     setResendDisabled(false);
-  //     setCountdown(30);
-  //   }
-  //   return () => clearInterval(timer);
-  // }, [resendDisabled, countdown]);
-
   async function onSubmit(data: { code: string }) {
     try {
       setIsLoading(true);
-      console.log("Submitting OTP:", { email, code: data.code });
+      console.log("Submitting OTP:", { email, code: data.code, role });
       
-      const response = await axios.post("/api/teacher/auth/verify", {
-        email: email,
+      const response = await axios.post(`/api/${role}/auth/verify`, {
+        email,
         code: data.code,
       });
 
       if (response.status === 200) {
         toast.success("Email verified successfully!");
-        router.push("/auth/teacher/login");
+        const redirectUrl = `/auth/${role}/login`;
+        console.log("Redirecting to:", redirectUrl);
+        router.push(redirectUrl);
       }
       
     } catch (error: any) {
@@ -69,25 +57,6 @@ export function VerifyOTPForm({ email }: { email: string }) {
       setIsLoading(false);
     }
   }
-
-  // const handleResendCode = async () => {
-  //   try {
-  //     setResendDisabled(true);
-  //     const response = await axios.post("/api/teacher/auth/resend-otp", {
-  //       email,
-  //     });
-
-  //     if (response.status !== 200) {
-  //       throw new Error(response.data.message || "Failed to resend code");
-  //     }
-
-  //     toast.success("Verification code resent!");
-  //   } catch (error: any) {
-  //     toast.error(error.response?.data?.message || "Failed to resend code");
-  //     console.error(error);
-  //     setResendDisabled(false);
-  //   }
-  // };
 
   return (
     <div className="mx-auto w-full max-w-[500px] space-y-6">
@@ -132,22 +101,6 @@ export function VerifyOTPForm({ email }: { email: string }) {
             </Button>
           </form>
         </Form>
-
-        <div className="mt-6 text-center text-sm">
-          <p className="text-muted-foreground">
-            Didn't receive the code?{" "}
-            <Button
-              variant="link"
-              className="h-auto p-0 text-primary"
-              // disabled={resendDisabled}
-              // onClick={handleResendCode}
-            >
-              {resendDisabled
-                ? `Resend in ${countdown}s`
-                : "Resend Code"}
-            </Button>
-          </p>
-        </div>
       </div>
     </div>
   );

@@ -141,7 +141,7 @@ const TeacherSchema = new Schema(
   { timestamps: true }
 );
 
-// Only create the email index
+// Only keep email index
 TeacherSchema.index({ email: 1, isVerified: 1 });
 
 export const Teacher = mongoose.models.Teacher || mongoose.model<ITeacher>('Teacher', TeacherSchema);

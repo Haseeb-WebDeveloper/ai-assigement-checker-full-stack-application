@@ -13,39 +13,21 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ message: "All fields are required" }, { status: 400 });
     }
 
-    console.log("Connecting to database");
     await connectDB();
-    console.log("Connected to database");
-
-    // Drop the teacherId index if it exists
-    try {
-        await Teacher.collection.dropIndex("teacherId_1");
-        console.log("Dropped teacherId index");
-    } catch (error) {
-        // Ignore error if index doesn't exist
-        console.log("No teacherId index to drop");
-    }
 
     // Clean up any existing unverified accounts with this email
     await Teacher.deleteMany({ email, isVerified: false });
 
-    console.log("Checking if verified teacher exists");
-    const existingTeacher = await Teacher.findOne({ email, isVerified: true });
-    console.log("Verified teacher exists:", existingTeacher);
+    const existingTeacher = await Teacher.findOne({ email });
     if (existingTeacher) {
         return NextResponse.json({ 
             message: "An account with this email already exists" 
         }, { status: 400 });
     }
 
-    console.log("Hashing password");
     const hashedPassword = await hashPassword(password);
-
-    console.log("Generating verification OTP");
     const verificationOtp = generateVerificationOTP();
-    console.log("Verification OTP:", verificationOtp);
 
-    console.log("Creating teacher");
     const teacher = await Teacher.create({ 
         name, 
         email, 
@@ -55,30 +37,25 @@ export async function POST(req: NextRequest) {
         verificationOtp,
         isVerified: false
     });
-    console.log("Teacher created:", teacher);
 
     try {
         await sendVerificationEmail(email, verificationOtp);
     } catch (error) {
-        // If email sending fails, delete the created teacher
         await Teacher.findByIdAndDelete(teacher._id);
-        console.error("Failed to send verification email", error);
         return NextResponse.json({ 
             message: "Failed to send verification email" 
         }, { status: 500 });
     }
 
-    const teacherData = {
-        id: teacher._id,
-        name,
-        email,
-        department,
-        bio
-    }
-
     return NextResponse.json({ 
         message: "Teacher account created successfully", 
-        data: teacherData 
+        data: {
+            id: teacher._id,
+            name,
+            email,
+            department,
+            bio
+        }
     }, { status: 201 });
 
    } catch (error: any) {

@@ -33,10 +33,44 @@ export type VerifyOTPInput = z.infer<typeof verifyOTPSchema>;
 export const teacherLoginSchema = z.object({
   email: z.string().email("Please enter a valid email"),
   password: z.string().min(1, "Password is required"),
-  rememberMe: z.boolean().default(false),
 });
 
 export type TeacherLoginInput = z.infer<typeof teacherLoginSchema>;
+
+
+
+
+
+// student
+
+// Teacher signup schema
+export const studentSignupSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email("Please enter a valid email"),
+  password: z
+    .string()
+    .min(6, "Password must be at least 6 characters")
+    .regex(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+      "Password must contain at least one uppercase letter, one lowercase letter, and one number"
+    ),
+  university: z.string().min(2, "Please select a university"),
+  department: z.string().min(2, "Please select a department"),
+  rollNo: z.string().min(2, "Please enter your roll number"),
+  currentSemester: z.number().min(1, "Please enter your current semester"),
+  subjects: z.array(z.object({})),
+});
+
+export type StudentSignupInput = z.infer<typeof studentSignupSchema>;
+
+
+// Add this to your existing auth-interface.ts
+export const studentLoginSchema = z.object({
+  email: z.string().email("Please enter a valid email"),
+  password: z.string().min(1, "Password is required"),
+});
+
+export type StudentLoginInput = z.infer<typeof studentLoginSchema>;
 
 
 

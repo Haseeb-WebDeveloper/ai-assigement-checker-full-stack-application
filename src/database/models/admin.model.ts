@@ -5,7 +5,6 @@ export interface IAdmin extends IBaseDocument {
   name: string;
   email: string;
   password: string;
-  adminId: string;
   profileImage?: string;
   role: 'Super Admin' | 'Department Admin' | 'System Admin';
   department?: string;
@@ -64,7 +63,6 @@ const AdminSchema = new Schema(
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    adminId: { type: String, required: true, unique: true },
     profileImage: String,
     role: {
       type: String,
@@ -145,8 +143,7 @@ const AdminSchema = new Schema(
 
 // Indexes
 AdminSchema.index({ email: 1 }, { unique: true });
-AdminSchema.index({ adminId: 1 }, { unique: true });
 AdminSchema.index({ role: 1 });
 AdminSchema.index({ 'activityLog.timestamp': -1 });
 
-export default mongoose.models.Admin || mongoose.model<IAdmin>('Admin', AdminSchema);
+export const Admin = mongoose.models.Admin || mongoose.model<IAdmin>('Admin', AdminSchema);

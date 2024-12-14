@@ -1,11 +1,11 @@
-import React from 'react'
+"use client";
 
-type Props = {}
+import { StudentSignupForm } from "@/components/forms/student-signup-form";
 
-function StudentSignup({}: Props) {
+export default function StudentSignupPage() {
   return (
-    <div>Student Signup</div>
-  )
+    <div className="flex justify-center items-center min-h-screen w-full bg-background py-16">
+      <StudentSignupForm />
+    </div>
+  );
 }
-
-export default StudentSignup

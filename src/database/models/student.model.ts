@@ -5,12 +5,13 @@ export interface IStudent extends IBaseDocument {
   name: string;
   email: string;
   password: string;
-  studentId: string;
   profileImage?: string;
   university: string;
   department: string;
-  enrollmentYear: number;
+  rollNo: string;
   currentSemester: number;
+  isVerified: boolean;
+  verificationOtp: string;
   subjects: Array<{
     subjectId: mongoose.Schema.Types.ObjectId;
     name: string;
@@ -41,12 +42,13 @@ const StudentSchema = new Schema(
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    studentId: { type: String, unique: true, required: true },
     profileImage: String,
     university: { type: String, required: true },
     department: { type: String, required: true },
-    enrollmentYear: { type: Number, required: true },
+    rollNo: { type: String, required: true },
     currentSemester: { type: Number, required: true },
+    isVerified: { type: Boolean, default: false },
+    verificationOtp: { type: String, default: '' },
     subjects: [{
       subjectId: { type: Schema.Types.ObjectId, ref: 'Subject' },
       name: String,
@@ -93,8 +95,5 @@ const StudentSchema = new Schema(
 
 // Indexes
 StudentSchema.index({ email: 1 }, { unique: true });
-StudentSchema.index({ studentId: 1 }, { unique: true });
-StudentSchema.index({ academicStatus: 1 });
-StudentSchema.index({ 'subjects.subjectId': 1 });
 
-export default mongoose.models.Student || mongoose.model<IStudent>('Student', StudentSchema);
+export const Student = mongoose.models.Student || mongoose.model<IStudent>('Student', StudentSchema);

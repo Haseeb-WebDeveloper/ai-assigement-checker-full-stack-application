@@ -27,5 +27,4 @@ const SubjectSchema = new Schema(
   { timestamps: true }  // Automatically adds createdAt and updatedAt fields
 );
 
-
-export default mongoose.models.Subject || mongoose.model<ISubject>('Subject', SubjectSchema);
+export const Subject = mongoose.models.Subject || mongoose.model<ISubject>('Subject', SubjectSchema);

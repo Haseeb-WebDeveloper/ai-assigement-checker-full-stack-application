@@ -12,10 +12,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -23,47 +21,50 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { TeacherSignupInput, teacherSignupSchema } from "@/types/auth-interface";
-import { AlertCircle, Eye, EyeOff, Loader2 } from "lucide-react";
+import { StudentSignupInput, studentSignupSchema } from "@/types/auth-interface";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import Link from "next/link";
-import { departments } from "@/constant/constant";
+import { departments, universities } from "@/constant/constant";
 
-export function TeacherSignupForm() {
+export function StudentSignupForm() {
   const router = useRouter();
   const [showPassword, setShowPassword] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
 
-  const form = useForm<TeacherSignupInput>({
-    resolver: zodResolver(teacherSignupSchema),
+  const form = useForm<StudentSignupInput>({
+    resolver: zodResolver(studentSignupSchema),
     defaultValues: {
       name: "",
       email: "",
       password: "",
+      university: "",
       department: "",
-      bio: "",
+      rollNo: "",
+      currentSemester: 1,
+      subjects: [],
     },
   });
 
-  async function onSubmit(data: TeacherSignupInput) {
+  async function onSubmit(data: StudentSignupInput) {
     try {
       setIsLoading(true);
-      console.log("Submitting teacher signup:", data);
+      console.log("Submitting student signup:", data);
       
-      const response = await axios.post("/api/teacher/auth/signup", data);
+      const response = await axios.post("/api/student/auth/signup", data);
       
       if (response.status === 201) {
         toast.success("Account created successfully!");
         const encodedEmail = encodeURIComponent(data.email);
-        const redirectUrl = `/auth/verify-otp/${encodedEmail}/teacher`;
+        const redirectUrl = `/auth/verify-otp/${encodedEmail}/student`;
         console.log("Redirecting to:", redirectUrl);
         router.push(redirectUrl);
       }
       
     } catch (error: any) {
       toast.error(error.response?.data?.message || "Failed to create account");
-      console.error("Teacher signup error:", error);
+      console.error("Student signup error:", error);
     } finally {
       setIsLoading(false);
     }
@@ -74,7 +75,7 @@ export function TeacherSignupForm() {
       <div className="rounded-xl border bg-card p-8">
         <div className="mb-8 space-y-2 text-center">
           <h1 className="text-2xl font-semibold tracking-tight">
-            Create Teacher Account
+            Create Student Account
           </h1>
           <p className="text-sm text-muted-foreground">
             Enter your details below to create your account
@@ -156,6 +157,31 @@ export function TeacherSignupForm() {
 
             <FormField
               control={form.control}
+              name="university"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>University</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger className="h-11">
+                        <SelectValue placeholder="Select university" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {universities.map((uni) => (
+                        <SelectItem key={uni} value={uni}>
+                          {uni}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
               name="department"
               render={({ field }) => (
                 <FormItem>
@@ -181,20 +207,45 @@ export function TeacherSignupForm() {
 
             <FormField
               control={form.control}
-              name="bio"
+              name="rollNo"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Bio</FormLabel>
+                  <FormLabel>Roll Number</FormLabel>
                   <FormControl>
-                    <Textarea
-                      placeholder="Tell us about yourself..."
-                      className="min-h-[120px] resize-none"
-                      {...field}
+                    <Input 
+                      placeholder="Enter your roll number" 
+                      {...field} 
+                      className="h-11"
                     />
                   </FormControl>
-                  <FormDescription className="text-xs">
-                    {field.value?.length || 0}/300 characters
-                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="currentSemester"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Current Semester</FormLabel>
+                  <Select 
+                    onValueChange={(value) => field.onChange(parseInt(value))} 
+                    defaultValue={field.value.toString()}
+                  >
+                    <FormControl>
+                      <SelectTrigger className="h-11">
+                        <SelectValue placeholder="Select semester" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
+                        <SelectItem key={sem} value={sem.toString()}>
+                          Semester {sem}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
@@ -215,7 +266,7 @@ export function TeacherSignupForm() {
           <p className="text-muted-foreground">
             Already have an account?{" "}
             <Link
-              href="/auth/teacher/login"
+              href="/auth/student/login"
               className="font-medium text-primary underline-offset-4 hover:underline"
             >
               Sign in

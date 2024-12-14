@@ -103,4 +103,4 @@ AssignmentSchema.index({ teacher_id: 1, status: 1 });
 AssignmentSchema.index({ dueDate: 1 });
 AssignmentSchema.index({ 'plagiarism.score': 1 });
 
-export default mongoose.models.Assignment || mongoose.model<IAssignment>('Assignment', AssignmentSchema);
+export const Assignment = mongoose.models.Assignment || mongoose.model<IAssignment>('Assignment', AssignmentSchema);

@@ -21,7 +21,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import Link from "next/link";
 
-export function TeacherLoginForm() {
+export function LoginForm({ role }: { role: string }) {
   const router = useRouter();
   const [showPassword, setShowPassword] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -38,11 +38,11 @@ export function TeacherLoginForm() {
     try {
       setIsLoading(true);
       
-      const response = await axios.post("/api/teacher/auth/login", data);
+      const response = await axios.post(`/api/${role}/auth/login`, data);
       
       if (response.status === 200) {
         toast.success("Logged in successfully!");
-        router.push("/dashboard"); // Redirect to dashboard
+        router.push(`/${role}`); // Redirect to dashboard
       }
       
     } catch (error: any) {

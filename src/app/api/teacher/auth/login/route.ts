@@ -11,7 +11,7 @@ export async function POST(req: Request) {
 
     // Validate request body
     const validatedData = teacherLoginSchema.parse(body);
-    const { email, password, rememberMe } = validatedData;
+    const { email, password } = validatedData;
 
     if (!email || !password) {
       return NextResponse.json(
@@ -76,7 +76,7 @@ export async function POST(req: Request) {
         path: '/',
         maxAge: 7 * 24 * 3600
     });
-    
+
     return response;
   } catch (error) {
     console.error("Error in login:", error);
