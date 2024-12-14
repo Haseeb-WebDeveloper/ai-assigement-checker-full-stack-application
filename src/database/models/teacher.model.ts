@@ -5,11 +5,12 @@ export interface ITeacher extends IBaseDocument {
   name: string;
   email: string;
   password: string;
-  teacherId: string;
   profileImage?: string;
   department: string;
   bio: string;
-  specialization: string[];
+  verificationOtp?: string;
+  isVerified: boolean;
+  credits: string;
   subjects: Array<{
     subjectId: mongoose.Schema.Types.ObjectId;
     name: string;
@@ -61,12 +62,14 @@ export interface ITeacher extends IBaseDocument {
 const TeacherSchema = new Schema(
   {
     name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
+    email: { type: String, required: true },
     password: { type: String, required: true },
     profileImage: { type: String, default: "" },
     department: { type: String, required: true },
     bio: { type: String, maxLength: 300 },
-    
+    verificationOtp: String,
+    isVerified: { type: Boolean, default: false },
+    credits: { type: String, default: "0" },
     subjects: [{
       subjectId: { type: Schema.Types.ObjectId, ref: 'Subject', required: true },
       name: { type: String, required: true },
@@ -138,13 +141,7 @@ const TeacherSchema = new Schema(
   { timestamps: true }
 );
 
-// Indexes for better query performance
-TeacherSchema.index({ email: 1 }, { unique: true });
-TeacherSchema.index({ teacherId: 1 }, { unique: true });
-TeacherSchema.index({ department: 1 });
-TeacherSchema.index({ 'subjects.subjectId': 1 });
-TeacherSchema.index({ 'assignments.assignmentId': 1 });
-TeacherSchema.index({ 'availability.status': 1 });
+// Only create the email index
+TeacherSchema.index({ email: 1, isVerified: 1 });
 
 export const Teacher = mongoose.models.Teacher || mongoose.model<ITeacher>('Teacher', TeacherSchema);
-  

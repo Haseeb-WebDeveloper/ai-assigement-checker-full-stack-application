@@ -3,6 +3,7 @@
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -22,11 +23,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { TeacherSignupInput, teacherSignupSchema, departments } from "@/types/auth-interface";
+import { TeacherSignupInput, teacherSignupSchema } from "@/types/auth-interface";
 import { AlertCircle, Eye, EyeOff, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import Link from "next/link";
+import { departments } from "@/constant/constant";
 
 export function TeacherSignupForm() {
   const router = useRouter();
@@ -48,25 +50,16 @@ export function TeacherSignupForm() {
     try {
       setIsLoading(true);
       
-      const response = await fetch("/api/teacher/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.message || "Something went wrong");
-      }
-
-      toast.success("Account created successfully!");
-      router.push("/auth/verify-otp");
+      const response = await axios.post("/api/teacher/auth/signup", data);
       
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Failed to create account");
+      if (response.status === 201) {
+        toast.success("Account created successfully!");
+        const encodedEmail = encodeURIComponent(data.email);
+        router.push(`/auth/verify-otp/${encodedEmail}`);
+      }
+      
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Failed to create account");
       console.error(error);
     } finally {
       setIsLoading(false);

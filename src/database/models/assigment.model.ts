@@ -9,7 +9,7 @@ export interface IAssignment extends IBaseDocument {
   subjectId: mongoose.Schema.Types.ObjectId;
   status: 'Pending' | 'Submitted' | 'Late' | 'Graded' | 'In Review';
   studentId: mongoose.Schema.Types.ObjectId;
-  teacherId: mongoose.Schema.Types.ObjectId | null;
+  teacher_id: mongoose.Schema.Types.ObjectId | null;
   grade: {
     score: number;
     letter: string;
@@ -99,7 +99,7 @@ const AssignmentSchema = new Schema(
 
 // Add indexes for better query performance
 AssignmentSchema.index({ studentId: 1, status: 1 });
-AssignmentSchema.index({ teacherId: 1, status: 1 });
+AssignmentSchema.index({ teacher_id: 1, status: 1 });
 AssignmentSchema.index({ dueDate: 1 });
 AssignmentSchema.index({ 'plagiarism.score': 1 });
 

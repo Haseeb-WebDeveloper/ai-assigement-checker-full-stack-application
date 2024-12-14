@@ -20,15 +20,23 @@ export const teacherSignupSchema = z.object({
 
 export type TeacherSignupInput = z.infer<typeof teacherSignupSchema>;
 
-// Available options for form selects
-export const departments = [
-  "Computer Science",
-  "Mathematics",
-  "Physics",
-  "Chemistry",
-  "Biology",
-  "Engineering",
-  "Business",
-  "Arts",
-] as const;
+// Verify OTP schema
+export const verifyOTPSchema = z.object({
+  email: z.string().email("Please enter a valid email"),
+  code: z.string().length(6, "Verification code must be 6 digits")
+    .regex(/^\d+$/, "Verification code must only contain numbers"),
+});
+
+export type VerifyOTPInput = z.infer<typeof verifyOTPSchema>;
+
+// Add this to your existing auth-interface.ts
+export const teacherLoginSchema = z.object({
+  email: z.string().email("Please enter a valid email"),
+  password: z.string().min(1, "Password is required"),
+  rememberMe: z.boolean().default(false),
+});
+
+export type TeacherLoginInput = z.infer<typeof teacherLoginSchema>;
+
+
 

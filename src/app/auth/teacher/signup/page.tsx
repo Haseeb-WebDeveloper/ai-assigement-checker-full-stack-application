@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { TeacherSignupForm } from "@/components/forms/teacher-signup-form";
 
 
